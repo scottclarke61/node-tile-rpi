@@ -12,7 +12,8 @@
     "build": "npm run clean && npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p ./configs/tsconfig.esm.json",
     "build:cjs": "tsc -p ./configs/tsconfig.cjs.json",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "prepare": "npm run build"
   },
   "types": "./lib/cjs/types/index.d.ts",
   "main": "./lib/cjs/index.js",
