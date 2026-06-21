@@ -42,7 +42,8 @@ noble.on('discover', async peripheral => {
 
 	// Based on the tileId, we can find the tile in our account
 	let tileId = await bleTile.getTileId()
-	let accTile = tiles.filter(t => t.id.startsWith(tileId))[0]
+	tileId = tileId.slice(1)
+	let accTile = tiles.filter(t => t.id.includes(tileId))[0]
 	if(!accTile){
 		console.log("Tile not found in account", tileId)
 		return
