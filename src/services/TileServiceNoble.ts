@@ -83,11 +83,24 @@ export class TileServiceNoble extends AbstractTileService {
         this.mepResponseChar.on('data', this.onMepResponse.bind(this))
     }
 
-    async authenticate(tile: Tile){
-        this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Subscribing to MEP Response`)
-        await this.mepResponseChar.subscribeAsync()
-        this.emit("debug", `[${this.macAddress}] Subscribed to MEP Response`)
-        await super.authenticate(tile)
+    async authenticate(tile) {
+        this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Discovering Descriptors`);
+        await new Promise((resolve, reject) => {
+            this.mepResponseChar.discoverDescriptors((error, descriptors) => {
+                if (error) reject(error);
+                else resolve(descriptors);
+            });
+        });
+
+        this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Subscribing to MEP Response`);
+        await new Promise((resolve, reject) => {
+            this.mepResponseChar.subscribe((error) => {
+                if (error) reject(error);
+                else resolve();
+            });
+        });
+        this.emit("debug", `[${this.macAddress}] Subscribed to MEP Response`);
+        await super.authenticate(tile);
     }
 
     isMepCmdOrRespSet(): boolean {
