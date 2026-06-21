@@ -12,7 +12,7 @@ import {TdtTransaction} from "./TdtTransaction.js";
 import {TdiTransaction} from "./TdiTransaction.js";
 import {ReadyTransaction} from "./ReadyTransaction.js";
 import {TrmTransaction} from "./TrmTransaction.js";
-
+import { AuthTransaction } from "./AuthTransaction.js";
 
 interface txMapType {
     [k: number]: {
