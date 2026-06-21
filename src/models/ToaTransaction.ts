@@ -43,7 +43,7 @@ let txMap: txMapType = {
     18: {name: "TOA_RSP_OPEN_CHANNEL", tx: ChOpenTransaction},
     19: {name: "TOA_RSP_CLOSE_CHANNEL", tx: ChannelTransaction},
     20: {name: "TOA_RSP_TDI", tx: TdiTransaction},
-    21: {name: "TOA_RSP_AUTHENTICATE", tx: null},
+    21: {name: "TOA_RSP_AUTHENTICATE", tx: AuthTransaction},
     25: {name: "TOA_RSP_TRM", tx: TrmTransaction},
     26: {name: "TOA_RSP_TPC", tx: null},
     27: {name: "TOA_RSP_ASSOCIATE", tx: null},
