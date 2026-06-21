@@ -84,12 +84,26 @@ export class TileServiceNoble extends AbstractTileService {
     }
 
     async authenticate(tile: Tile){
-        this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Subscribing to MEP Response`)
-        await this.mepResponseChar.subscribeAsync()
-        this.emit("debug", `[${this.macAddress}] Subscribed to MEP Response`)
-        await super.authenticate(tile)
-    }
-
+            this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Discovering descriptors for MEP Response`)
+            await this.mepResponseChar.discoverDescriptorsAsync()
+    
+            this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Manually subscribing to MEP Response via CCCD`)
+            
+            // Find the Client Characteristic Configuration Descriptor (UUID 2902)
+            const cccd = this.mepResponseChar.descriptors.find(d => d.uuid === '2902')
+            
+            if (cccd) {
+                // Write 0x0001 (LE: [0x01, 0x00]) to enable notifications manually
+                await cccd.writeValueAsync(Buffer.from([0x01, 0x00]))
+                this.emit("debug", `[${this.macAddress}] Subscribed to MEP Response successfully via descriptor write`)
+            } else {
+                this.emit("debug", `[${this.macAddress}] CCCD (2902) descriptor not found, falling back to subscribeAsync`)
+                await this.mepResponseChar.subscribeAsync()
+            }
+    
+            await super.authenticate(tile)
+        }
+    
     isMepCmdOrRespSet(): boolean {
         return !!(this.mepCommandChar || this.mepResponseChar)
     }
