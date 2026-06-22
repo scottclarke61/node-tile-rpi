@@ -72,7 +72,8 @@ export class AbstractTileService extends EventEmitter {
         this.toaProcessor = new ToaProcessor()
         this.ringingStateMachine = new RingingStateMachine()
 
-        this.emit("debug", `[${this.macAddress}] Connected`)
+        this.emit("debug", `[${this.macAddress}] Connected. Pausing...`)
+        await new Promise(r => setTimeout(r, 300))
         await this.discoverServices()
         this.emit("debug", `Discovered services ${this.macAddress}`)
 
