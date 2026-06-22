@@ -62,25 +62,40 @@ export class TileServiceNoble extends AbstractTileService {
 
     async discoverServices(){
         this.emit("debug", `[${this.macAddress}] Discovering services`)
-        const services = await this.peripheral.discoverServicesAsync([]);
+        
+        // Format the FEED_SERVICE UUID to match Noble's short-form expectations (e.g., "feed")
+        const targetServiceUuid = FEED_SERVICE.slice(4, 8); 
+        
+        // ONLY discover the feed service, bypassing all others
+        const services = await this.peripheral.discoverServicesAsync([targetServiceUuid]);
         this.emit("debug", `[${this.macAddress}] Service found: ${services.map(s => s.uuid).join(" ")}`)
-
-        this.feedService = services.filter(s => s.uuid == FEED_SERVICE.slice(4, 8))[0]
+    
+        this.feedService = services.filter(s => s.uuid == targetServiceUuid)[0]
         if(!this.feedService){
             throw "Feed service not found"
         }
-
+    
         this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Discovering characteristics`)
-        const characteristics = await this.feedService.discoverCharacteristicsAsync([]);
+        
+        // Explicitly target only the characteristics your code reads/writes to
+        const targetCharUuids = [
+            MEP_COMMAND_CHAR.replaceAll("-", ""),
+            MEP_RESPONSE_CHAR.replaceAll("-", ""),
+            TILE_ID_CHAR.replaceAll("-", "")
+        ];
+        
+        // ONLY discover these specific characteristics
+        const characteristics = await this.feedService.discoverCharacteristicsAsync(targetCharUuids);
         this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Characteristics found: ${characteristics.map(c => c.uuid).join(" ")}`)
-
+    
         this.mepCommandChar = characteristics.filter(c => c.uuid == MEP_COMMAND_CHAR.replaceAll("-", ""))[0]
         this.mepResponseChar = characteristics.filter(c => c.uuid == MEP_RESPONSE_CHAR.replaceAll("-", ""))[0]
         this.tileIdChar = characteristics.filter(c => c.uuid == TILE_ID_CHAR.replaceAll("-", ""))[0]
+        
         if(!this.tileIdChar){
             this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Tile ID characteristic not found, Tile does not use Private ID`)
         }
-
+    
         this.mepResponseChar.on('data', this.onMepResponse.bind(this))
     }
 
