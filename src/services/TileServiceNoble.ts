@@ -55,7 +55,7 @@ export class TileServiceNoble extends AbstractTileService {
     }
 
     async discoverServices(){
-        this.emit("debug", `[${this.macAddress}] Discovering services`)
+        this.emit("debug", `[${this.macAddress}] Discovering filtered services`)
         
         // Format the FEED_SERVICE UUID to match Noble's short-form expectations (e.g., "feed")
         const targetServiceUuid = FEED_SERVICE.slice(4, 8); 
