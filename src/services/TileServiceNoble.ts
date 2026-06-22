@@ -31,12 +31,6 @@ export class TileServiceNoble extends AbstractTileService {
         await this.peripheral.connectAsync()
         this.emit("debug", `[${this.macAddress}] connectAsync() resolved successfully!`)
         
-        setInterval(async _=> {
-            this.emit("rssi", await this.peripheral.updateRssiAsync())
-        }, rssiTimeout)
-
-        this.peripheral.once('rssiUpdate', rssi => this.emit("rssi", rssi));
-
         return super.connect()
     }
 
