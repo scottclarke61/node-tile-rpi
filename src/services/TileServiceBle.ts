@@ -28,6 +28,7 @@ export class TileServiceBle extends AbstractTileService {
 
         this.emit("debug", `[${this.macAddress}] Connecting`)
         await this.peripheral.connect()
+        this.emit("debug", `Peripheral connected. Awaiting gatt server.`) 
         this.gattServer = await this.peripheral.gatt()
 
         setInterval(async _=> {
