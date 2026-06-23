@@ -31,7 +31,7 @@
     "url": "https://github.com/lesleyxyz/node-tile.git"
   },
   "dependencies": {
-    "@abandonware/noble": "^1.9.2-21",
+    "@stoprocent/noble": "^2.5.2",
     "noble-winrt": "^0.1.1",
     "node-ble": "^1.9.0",
     "node-fetch": "^2.6.7",
