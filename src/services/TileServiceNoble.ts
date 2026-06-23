@@ -114,6 +114,7 @@ export class TileServiceNoble extends AbstractTileService {
     }
 
     async _sendPackets(toSend: Buffer){
+        await new Promise(resolve => setTimeout(resolve, 50));
         await this.mepCommandChar.writeAsync(toSend, true)
     }
 
