@@ -154,7 +154,11 @@ export class AbstractTileService extends EventEmitter {
         if(responseType == "CONNECTIONLESS_ID_RESPONSE") {
             if(toaType == "TOA_RSP_AUTHENTICATE" || toaType == "TOA_RSP_ASSOCIATE"){
                 if(toaType == "TOA_RSP_AUTHENTICATE") {
-                    this.sendPacketsPreAuth(16, this.randA)
+                 // --- FIX FOR @STOPROCENT SPEED COMPATIBILITY ---
+                    // Wait 100ms to give the Tile firmware time to shift states
+                    setTimeout(() => {
+                        this.sendPacketsPreAuth(16, this.randA);
+                    }, 100);
                 }
                 return this.handleAuthAssociateTransaction(new AuthTransaction(toaData))
             } else if (toaType == "TOA_RSP_OPEN_CHANNEL") {
