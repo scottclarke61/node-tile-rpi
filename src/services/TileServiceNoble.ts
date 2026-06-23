@@ -81,7 +81,11 @@ export class TileServiceNoble extends AbstractTileService {
             this.emit("debug", `[${this.macAddress}] [FEED_SERVICE] Tile ID characteristic not found, Tile does not use Private ID`)
         }
 
-        this.mepResponseChar.on('data', this.onMepResponse.bind(this))
+        // --- FIX FOR @STOPROCENT PACKET DROP ---
+        const boundResponseHandler = this.onMepResponse.bind(this);
+        this.mepResponseChar.on('data', boundResponseHandler);
+        this.mepResponseChar.on('notification', boundResponseHandler); 
+        // ---------------------------------------
     }
 
     async authenticate(tile: Tile){
